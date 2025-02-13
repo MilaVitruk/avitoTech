@@ -3,6 +3,18 @@ import requests
 
 from api.client import get_item_by_id, item_id, host
 from jsonschema import validate
+from api.utils import schemas
+
+payload = {
+    "name": 'Телефон',
+    "price": 10,
+    "sellerId": 999999,
+    "statistics": {
+        "contacts": 32,
+        "like": 35,
+        "viewCount": 14
+    }
+}
 
 
 def test_can_get_item_by_valid_id(item_id):
@@ -21,25 +33,7 @@ def test_validation_get_item_by_id_json(item_id):
     """Тест 1.3 создает объявление, получает id созданного объявления,
     запрашивает объявление по id,
     проводит валидацию JSON-схемы"""
-    schema = {"type": "array",
-              "minItems": 1,
-              "items": {
-                  "type": "object",
-                  "required": ["id", "name", "price", "sellerId", "statistics"],
-                  "properties": {
-                      "id": {"type": "string"},
-                      "name": {"type": "string"},
-                      "price": {"type": "number"},
-                      "sellerId": {"type": "number"},
-                      "statistics": {"type": "object",
-                                     "required": ["contacts", "likes", "viewCount"],
-                                     "properties": {"contacts": {"type": "number"},
-                                                    "likes": {"type": "number"},
-                                                    "viewCount": {"type": "number"}
-
-                                                    }},
-                  }
-              }}
+    schema = schemas['get_by_id_OK']
     data = get_item_by_id(item_id).json()
     validate(data, schema)
 
@@ -63,32 +57,15 @@ def test_validation_not_existing_id_json(item_id):
     split_id = item_id.split('-')
     split_id[1] = "0000"
     not_existing_id = '-'.join(split_id)
-    schema = {
-        "type": "object",
-        "required": ["result", "status"],
-        "properties": {
-            "result": {"type": "object",
-                       "properties": {"message": {"type": "string"},
-                                      "messages": {"type": "null", "properties": {}}},
-                       "status": {"type": "string"}}},
-        "status": {"type": "string"},
-    }
+    schema = schemas['get_by_id_BAD']
     data = get_item_by_id(not_existing_id).json()
     validate(data, schema)
+
 
 # Поначалу невалидные значения id провоцировали ошибку 500, в данный момент не получается ее вызвать
 # def test_validation_not_existing_id_json(item_id):
 #     """Тест 1.6 Валидация JSON-схемы ошибки 500"""
-#     schema = {
-#         "type": "object",
-#         # "required": {"result", "status"},
-#         "properties": {
-#             "result": {"type": "object",
-#                        "properties": {"message": {"type": "string"},
-#                                       "messages": {"type": "null", "properties": {}}},
-#                        "status": {"type": "string"}}},
-#             "status": {"type": "string"},
-#         }
+#     schema = schemas['get_by_id_BAD']
 #     data = get_item_by_id(item_id="teststringinput").json()
 #     print(data)
 #     validate(data, schema)
