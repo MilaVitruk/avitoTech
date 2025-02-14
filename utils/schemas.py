@@ -49,11 +49,13 @@ schemas = {'get_by_id_OK': schema_item,
            },
            'post_BAD': {
                "type": "object",
-               # "required": ["result", "status"],
+               "required": ["result", "status"],
                "properties": {
                    "result": {"type": "object",
                               "properties": {
                                   "messages": {"type": "object",
+                                               "properties": {"nostrudffb": {"type": "string"},
+                                                              "Ut__": {"type": "string"}}
                                                },
                                   "message": {"type": "string"},
                               }},

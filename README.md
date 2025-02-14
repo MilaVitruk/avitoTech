@@ -53,27 +53,27 @@
 3. Перейдите в папку с проектом, создайте и активируйте виртуальное окружение.
 Windows ОС:
 ```
-    python -m venv venv_name
-    venv_name\Scripts\activate
+python -m venv venv_name
+venv_name\Scripts\activate
 ```
 Unix-системы:
 
 ```
-    python3 -venv venv_name
-    source venv_name/bin/activate
+python3 -venv venv_name
+source venv_name/bin/activate
 ```
 4. Установите зависимости из файла [requirements.txt](./requirements.txt)
 ```
-    pip install requirements.txt
+pip install requirements.txt
 ```
 Если не получилось, попробуйте
 ```
-    pip3 install requirements.txt
+pip3 install -r requirements.txt
 ```
 
 5. Запустите тесты
 ``` 
-    pytest -v
+pytest -v
 ```
 ___
 Примечание:
