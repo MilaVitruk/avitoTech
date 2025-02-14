@@ -3,27 +3,27 @@ import random
 import pytest
 from jsonschema.validators import validate
 
-# import requests
-from api.client import get_item_by_id, host, create_item
-from api.utils import schemas
+from api.client import get_item_by_id, create_item
+from utils.schemas import schemas
 
 sellerID = random.randint(1111, 9999)
 
+# Предусловие
 payload_without_statistics = {
-    "name": 'Телефон',
-    "price": 10,
-    "sellerId": 999999
+    "name": 'dsds',
+    "price": 1,
+    "sellerId": 1234345231
 }
 
 payload_with_statistics = {
-    "name": 'Телефон',
-    "price": 10,
-    "sellerId": 999999,
-    "statistics": {
-        "contacts": 32,
-        "likes": 35,
-        "viewCount": 14
-    }
+  "sellerID": 1234345231,
+  "name": "dsds",
+  "price": 1,
+  "statistics":{
+    "contacts":3,
+    "likes":123,
+    "viewCount":12
+  }
 }
 
 
@@ -46,6 +46,7 @@ def test_create_item_name_correct():
     """Тест 4.3, проверка, что имя создаваемого объявления соответствует имени опубликованного"""
     response = create_item(payload_without_statistics).json()
     id_posted_item = response['status'].split()[3]
+    print(id_posted_item)
     get_response = get_item_by_id(id_posted_item)
     assert get_response.json()[0]['name'] == payload_without_statistics['name']
 
@@ -116,13 +117,8 @@ def test_validation_bad_request_json():
     """Тест 4.10 Валидация JSON-схемы некорректного запроса публикации"""
     payload_test_BAD = {
         "name": "Some Valid Name",
-        "price": 'Not valid price',
-        "sellerId": 45678,
-        "statistics": {
-            "contacts": 32,
-            "likes": 35,
-            "viewCount": 14
-        }
+        "price": "Not valid price",
+        "sellerId": 45678
     }
 
     schema = schemas['post_BAD']

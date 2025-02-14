@@ -3,18 +3,7 @@ import requests
 
 from api.client import get_item_by_id, item_id, host
 from jsonschema import validate
-from api.utils import schemas
-
-payload = {
-    "name": 'Телефон',
-    "price": 10,
-    "sellerId": 999999,
-    "statistics": {
-        "contacts": 32,
-        "like": 35,
-        "viewCount": 14
-    }
-}
+from utils.schemas import schemas
 
 
 def test_can_get_item_by_valid_id(item_id):
@@ -38,7 +27,7 @@ def test_validation_get_item_by_id_json(item_id):
     validate(data, schema)
 
 
-@pytest.mark.parametrize("not_valid_id", ['teststringinput', None, '', 1234, "@#$%", -10])
+@pytest.mark.parametrize("not_valid_id", ["кириллица", None, "", 1234, "@#$%", -10, 0])
 def test_cant_get_item_by_not_valid_id(not_valid_id):
     """Тест 1.4 подставляет невалидные значения id в запрос"""
     assert get_item_by_id(not_valid_id).status_code == 400
@@ -60,15 +49,6 @@ def test_validation_not_existing_id_json(item_id):
     schema = schemas['get_by_id_BAD']
     data = get_item_by_id(not_existing_id).json()
     validate(data, schema)
-
-
-# Поначалу невалидные значения id провоцировали ошибку 500, в данный момент не получается ее вызвать
-# def test_validation_not_existing_id_json(item_id):
-#     """Тест 1.6 Валидация JSON-схемы ошибки 500"""
-#     schema = schemas['get_by_id_BAD']
-#     data = get_item_by_id(item_id="teststringinput").json()
-#     print(data)
-#     validate(data, schema)
 
 
 def test_cant_delete_item(item_id):

@@ -3,8 +3,7 @@ import requests
 
 from api.client import get_statistics_by_id, item_id, get_item_by_id, host
 from jsonschema import validate
-from api.utils import schemas
-
+from utils.schemas import schemas
 
 def test_can_get_statistic_by_id(item_id):
     """Тест 3.1 создает объявление, получает id созданного объявления, запрашивает статистику по id"""
@@ -39,7 +38,7 @@ def test_cant_get_statistic_id_not_exist(item_id):
     assert get_statistics_by_id(not_existing_id).status_code == 404
 
 
-def test_validate_not_exist(item_id):
+def test_validate_statistics_not_exist(item_id):
     """Тест 3.6 запрашивает статистику по несуществующему id, проверяет схему полученного ответа"""
     split_id = item_id.split('-')
     split_id[1] = "0000"
